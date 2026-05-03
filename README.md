@@ -140,7 +140,7 @@ Phương thức:
 mvn clean compile
 
 # Run test class
-mvn exec:java -Dexec.mainClass="com.atm.entity.ATMTest"
+mvn -q org.codehaus.mojo:exec-maven-plugin:3.1.0:java "-Dexec.mainClass=com.atm.entity.ATMTest"
 ```
 
 ### Cách 2: Chạy trực tiếp trong IDE
