@@ -1,0 +1,62 @@
+-- init.sql: tạo database + bảng mẫu cho dự án ATM
+-- Chạy trên MySQL: mysql -u root -p < init.sql
+
+DROP DATABASE IF EXISTS atmdb;
+CREATE DATABASE atmdb CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+USE atmdb;
+
+-- KhachHang
+CREATE TABLE KhachHang (
+  MaKH VARCHAR(20) PRIMARY KEY,
+  HoTen VARCHAR(100) NOT NULL,
+  SoCCCD VARCHAR(30),
+  SoDienThoai VARCHAR(20),
+  Email VARCHAR(100)
+) ENGINE=InnoDB;
+
+-- TaiKhoan
+CREATE TABLE TaiKhoan (
+  SoTK VARCHAR(30) PRIMARY KEY,
+  SoDu DECIMAL(18,2) NOT NULL DEFAULT 0,
+  TrangThai VARCHAR(20) NOT NULL DEFAULT 'Hoat_Dong',
+  MaKH VARCHAR(20),
+  NgayMo DATETIME DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (MaKH) REFERENCES KhachHang(MaKH) ON DELETE SET NULL
+) ENGINE=InnoDB;
+
+-- TheATM
+CREATE TABLE TheATM (
+  SoThe VARCHAR(32) PRIMARY KEY,
+  MaPIN VARCHAR(20) NOT NULL,
+  TrangThai VARCHAR(20) NOT NULL DEFAULT 'Hoat_Dong',
+  SoLanNhapSai INT DEFAULT 0,
+  HanNhapSaiToiDa INT DEFAULT 3,
+  SoTK_LienKet VARCHAR(30),
+  NgayCapThe DATETIME DEFAULT CURRENT_TIMESTAMP,
+  NgayHetHan DATETIME DEFAULT (CURRENT_TIMESTAMP + INTERVAL 5 YEAR),
+  FOREIGN KEY (SoTK_LienKet) REFERENCES TaiKhoan(SoTK) ON DELETE SET NULL
+) ENGINE=InnoDB;
+
+-- GiaoDich
+CREATE TABLE GiaoDich (
+  MaGD VARCHAR(50) PRIMARY KEY,
+  LoaiGiaoDich VARCHAR(30),
+  SoTien DECIMAL(18,2),
+  ThoiGian DATETIME DEFAULT CURRENT_TIMESTAMP,
+  TrangThai VARCHAR(20),
+  SoTK VARCHAR(30),
+  FOREIGN KEY (SoTK) REFERENCES TaiKhoan(SoTK) ON DELETE SET NULL
+) ENGINE=InnoDB;
+
+-- Sample data
+INSERT INTO KhachHang (MaKH, HoTen, SoCCCD, SoDienThoai, Email)
+VALUES ('KH001','Nguyen Van A','123456789','0912345678','nguyenvana@email.com');
+
+INSERT INTO TaiKhoan (SoTK, SoDu, TrangThai, MaKH)
+VALUES ('TK001',10000000.00,'Hoat_Dong','KH001'),('TK002',50000000.00,'Hoat_Dong','KH001'),('TK003',5000000.00,'Hoat_Dong','KH001');
+
+INSERT INTO TheATM (SoThe, MaPIN, TrangThai, SoLanNhapSai, HanNhapSaiToiDa, SoTK_LienKet)
+VALUES ('1234567890123456','1234','Hoat_Dong',0,3,'TK001');
+
+INSERT INTO GiaoDich (MaGD, LoaiGiaoDich, SoTien, TrangThai, SoTK)
+VALUES (CONCAT('GD', UNIX_TIMESTAMP()), 'Nap_Tien', 2000000.00, 'Thanh_Cong', 'TK001');
