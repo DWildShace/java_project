@@ -1,4 +1,4 @@
-package com.atm.repository;
+package com.atm.DAO;
 
 /**
  * DatabaseTest - kiem tra ket noi MySQL

@@ -1,4 +1,4 @@
-package com.atm.repository;
+package com.atm.DAO;
 
 import java.io.InputStream;
 import java.sql.Connection;

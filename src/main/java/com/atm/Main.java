@@ -1,6 +1,6 @@
-package com.atm.main;
+package com.atm;
 
-import com.atm.repository.DatabaseConnection;
+import com.atm.DAO.DatabaseConnection;
 
 /**
  * Main entry point for the ATM project.
