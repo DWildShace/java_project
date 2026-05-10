@@ -1,4 +1,4 @@
-﻿package com.atm.entity;
+package com.atm.entity;
 
 public class TaiKhoanThanhToan extends TaiKhoan {
     private double phiBaoHanh;

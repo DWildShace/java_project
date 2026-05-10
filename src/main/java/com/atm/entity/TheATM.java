@@ -1,4 +1,4 @@
-﻿package com.atm.entity;
+package com.atm.entity;
 
 import java.time.LocalDateTime;
 
@@ -7,10 +7,11 @@ public class TheATM {
     private String maPIN;
     private String trangThai;
     private String soTK_LienKet;
-    private int soLanNhapSai;
-    private int hanNhapSaiToiDa;
+    private int soLanNhapSai = 0;
+    private int hanNhapSaiToiDa = 3;
     private LocalDateTime ngayCapThe;
     private LocalDateTime ngayHetHan;
+    
 
     public TheATM() {}
 
@@ -41,4 +42,35 @@ public class TheATM {
     public void setNgayCapThe(LocalDateTime ngayCapThe) { this.ngayCapThe = ngayCapThe; }
     public LocalDateTime getNgayHetHan() { return ngayHetHan; }
     public void setNgayHetHan(LocalDateTime ngayHetHan) { this.ngayHetHan = ngayHetHan; }
+  
+    public boolean xacThucPIN(String pinNhap) {
+        if (!isTheHoatDong()) {
+            System.out.println("Thẻ ATM hiện không hoạt động.");
+            return false;
+        }
+        
+
+        if (this.maPIN.equals(pinNhap)) {
+            soLanNhapSai = 0;
+            return true;
+        }
+
+        soLanNhapSai++;
+        System.out.println("Sai mã PIN. Lần sai thứ: " + soLanNhapSai);
+
+        if (soLanNhapSai >= hanNhapSaiToiDa) {
+            this.trangThai = "Khoa";
+            System.out.println("Bạn đã nhập sai PIN 3 lần. Thẻ đã bị khóa.");
+        }
+
+        return false;
+    }
+    public void moKhoaThe() {
+        this.trangThai = "Hoat_Dong";
+        this.soLanNhapSai = 0;
+        System.out.println("Thẻ ATM đã được mở khóa.");
+    }
+    public boolean isTheHoatDong() {
+        return "Hoat_Dong".equalsIgnoreCase(this.trangThai);
+    }
 }

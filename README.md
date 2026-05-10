@@ -129,6 +129,108 @@ Biến:
 Phương thức:
 - taoMaGiaoDich()               // Tạo mã duy nhất
 ```
+## 🛡️ Giai Đoạn 2: Hàng Rào Bảo Vệ & Xử Lý Ngoại Lệ (Tuần 3-4)
+
+### 🎯 Mục Tiêu
+
+Tăng tính an toàn cho hệ thống ATM bằng cách xử lý các lỗi phổ biến trong giao dịch:
+
+* Nhập sai mã PIN
+* Nhập sai định dạng dữ liệu
+* Rút tiền vượt quá số dư
+* Rút tiền vượt hạn mức
+* Tài khoản hoặc thẻ bị khóa
+* Lỗi kết nối cơ sở dữ liệu
+
+Mục tiêu là đảm bảo hệ thống không bị crash khi người dùng thao tác sai.
+
+---
+
+### ⚠️ Custom Exception
+
+#### Package
+
+```text id="0j6d8y"
+src/main/java/com/atm/exception/
+```
+
+#### Bao gồm các exception chính
+
+```text id="ux4s3g"
+InvalidAmountException       — Số tiền không hợp lệ
+InsufficientBalanceException — Không đủ số dư
+InvalidPinException          — Sai mã PIN
+AccountLockedException       — Tài khoản bị khóa
+WithdrawalLimitException     — Vượt hạn mức rút tiền
+TransferFailedException      — Chuyển khoản thất bại
+```
+
+---
+
+### 🔐 Bảo Vệ Tài Khoản & Thẻ ATM
+
+#### TaiKhoan.java
+
+##### Bổ sung chức năng
+
+* Khóa tài khoản
+* Mở khóa tài khoản
+* Kiểm tra trạng thái hoạt động
+
+---
+
+#### TheATM.java
+
+##### Bổ sung chức năng
+
+* Đếm số lần nhập sai mã PIN
+* Tự động khóa thẻ sau 3 lần nhập sai
+* Mở khóa thẻ
+* Kiểm tra trạng thái thẻ
+
+
+---
+
+### 💳 Kiểm Tra Giao Dịch
+
+#### Các giao dịch quan trọng đều được kiểm tra bằng `try-catch`
+
+* Rút tiền (`rutTien`)
+* Nạp tiền (`napTien`)
+* Chuyển tiền (`chuyenTien`)
+* Đổi mã PIN (`doiPIN`)
+* Đăng nhập ATM (`dangNhapATM`)
+
+---
+
+#### Thứ tự kiểm tra
+
+```text id="q6v56i"
+1. Kiểm tra trạng thái thẻ
+2. Kiểm tra mã PIN
+3. Kiểm tra trạng thái tài khoản
+4. Kiểm tra số tiền hợp lệ
+5. Kiểm tra số dư khả dụng
+6. Kiểm tra hạn mức giao dịch
+7. Thực hiện giao dịch
+```
+
+---
+
+### 🧪 Kiểm Thử
+
+#### Các test case chính
+
+* Sai PIN 3 lần → khóa thẻ
+* Rút tiền âm hoặc bằng 0
+* Rút vượt số dư
+* Rút vượt hạn mức
+* Chuyển khoản lỗi
+* Database connection fail
+
+#### Kết quả mong đợi
+
+Hệ thống hiển thị thông báo lỗi rõ ràng thay vì dừng chương trình đột ngột.
 
 ---
 
@@ -146,6 +248,24 @@ mvn -q org.codehaus.mojo:exec-maven-plugin:3.1.0:java "-Dexec.mainClass=com.atm.
 ### Cách 2: Chạy trực tiếp trong IDE
 1. Mở file `ATMTest.java`
 2. Click chuột phải → Run → Run 'ATMTest.main()'
+
+## 🧪 Chạy Test Giai Đoạn 2
+
+### Cách 1: Sử dụng Maven
+```bash
+# Compile project
+mvn clean compile
+
+# Chạy toàn bộ test
+mvn test
+
+# Chạy demo console để kiểm tra case đúng và case lỗi
+java -cp target/classes com.atm.DemoConsole
+```
+
+### Cách 2: Chạy trực tiếp trong IDE
+1. Mở file DemoConsole.java
+2. Click chuột phải → Run → Run 'DemoConsole.main()'
 
 ### 📊 Output Mong Đợi
 - ✅ Kiểm tra kế thừa - TaiKhoanTietKiem, TaiKhoanDangDo hoạt động đúng
@@ -166,28 +286,12 @@ mvn -q org.codehaus.mojo:exec-maven-plugin:3.1.0:java "-Dexec.mainClass=com.atm.
 
 ---
 
-## 🔄 Giai Đoạn Tiếp Theo
-
-**Giai Đoạn 2:** Xây dựng Database & JDBC (Tuần 3-4)
-- Tạo bảng MySQL
-- Viết Repository class (DAO pattern)
-- Kết nối JDBC
-
-**Giai Đoạn 3:** Xây dựng Service Layer & Thread-Safe (Tuần 5-6)
-- Service class xử lý logic
-- Synchronized cho rút tiền
-- Transaction Commit/Rollback
-
-**Giai Đoạn 4:** Xây dựng UI (Giai đoạn cuối)
-- Java Swing
-- CardLayout cho chuyển màn hình
-- GridLayout cho bàn phím số
-
----
 
 ## 📝 Ghi Chú
 
-- **Tác giả**: Nguyễn Văn Sơn (Giai đoạn 1)
+- **Tác giả**: 
+Nguyễn Văn Sơn (Giai đoạn 1)
+, Vũ Mạnh Cường (Giai đoạn 2)
 - **Công nghệ**: Java 11+, Maven
 - **Database**: MySQL (Giai đoạn 2)
 - **UI**: Java Swing (Giai đoạn 4)
@@ -204,4 +308,3 @@ Nếu có câu hỏi về cấu trúc OOP, vui lòng tham khảo:
 
 **Phiên bản**: 1.0 (Giai đoạn 1)  
 **Cập nhật lần cuối**: 02/05/2026
-
