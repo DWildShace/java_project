@@ -1,4 +1,4 @@
-﻿package com.atm.entity;
+package com.atm.entity;
 
 import java.time.LocalDateTime;
 
@@ -23,7 +23,7 @@ public class GiaoDich {
 
     public String getMaGD() { return maGD; }
     public void setMaGD(String maGD) { this.maGD = maGD; }
-    public String getLoaiGiaoDich() { return loaiGiaoDich; }
+    public String getLoaiGiaoDich() { return loaiGiaoDich; }    
     public void setLoaiGiaoDich(String loaiGiaoDich) { this.loaiGiaoDich = loaiGiaoDich; }
     public double getSoTien() { return soTien; }
     public void setSoTien(double soTien) { this.soTien = soTien; }
