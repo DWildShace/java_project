@@ -3,13 +3,6 @@
   "configurations": [
     {
       "type": "java",
-      "name": "Main",
-      "request": "launch",
-      "mainClass": "com.atm.Main",
-      "projectName": "atm-system"
-    },
-    {
-      "type": "java",
       "name": "Run DemoConsole",
       "request": "launch",
       "mainClass": "com.atm.DemoConsole",
