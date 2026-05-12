@@ -8,6 +8,7 @@ import com.atm.exception.SoTienKhongHopLeException;
 import com.atm.exception.TaiKhoanBiKhoaException;
 import com.atm.exception.VuotHanMucRutTienException;
 import com.atm.util.Utils;
+import com.atm.util.TransactionLogger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -41,14 +42,18 @@ public class ATMService {
             kiemTraTaiKhoanCoTheGiaoDich(taiKhoan);
             taiKhoan.kiemTraPIN(pinNhap);
             double soTien = chuyenDoiSoTien(soTienNhap, "rut");
-            kiemTraSoDu(taiKhoan, soTien);
-            kiemTraHanMucRutTien(taiKhoan, soTien);
+            synchronized (taiKhoan) {
+                kiemTraSoDu(taiKhoan, soTien);
+                kiemTraHanMucRutTien(taiKhoan, soTien);
 
-            taiKhoan.setSoDu(taiKhoan.getSoDu() - soTien);
-            ghiNhanRutTien(taiKhoan, soTien);
+                taiKhoan.setSoDu(taiKhoan.getSoDu() - soTien);
+                ghiNhanRutTien(taiKhoan, soTien);
+            }
+            TransactionLogger.logRutTien(taiKhoan, soTien, "Thanh cong");
             return "Rut tien thanh cong: " + Utils.formatCurrency(soTien) + ".";
         } catch (TaiKhoanBiKhoaException | SaiPinException | SoTienKhongHopLeException
                  | KhongDuSoDuException | VuotHanMucRutTienException e) {
+            TransactionLogger.logRutTien(taiKhoan, 0, e.getMessage());
             return e.getMessage();
         }
     }
@@ -59,18 +64,24 @@ public class ATMService {
             kiemTraTaiKhoanCoTheGiaoDich(taiKhoanNguon);
             taiKhoanNguon.kiemTraPIN(pinNhap);
             double soTien = chuyenDoiSoTien(soTienNhap, "chuyen");
-            kiemTraSoDu(taiKhoanNguon, soTien);
-
             TaiKhoan taiKhoanDich = danhSachTaiKhoan.get(soTaiKhoanDich);
             if (taiKhoanDich == null) {
                 throw new ChuyenKhoanThatBaiException("Loi: Tai khoan dich khong ton tai.");
             }
 
-            taiKhoanNguon.setSoDu(taiKhoanNguon.getSoDu() - soTien);
-            taiKhoanDich.setSoDu(taiKhoanDich.getSoDu() + soTien);
+            synchronized (taiKhoanNguon) {
+                kiemTraSoDu(taiKhoanNguon, soTien);
+                taiKhoanNguon.setSoDu(taiKhoanNguon.getSoDu() - soTien);
+            }
+
+            synchronized (taiKhoanDich) {
+                taiKhoanDich.setSoDu(taiKhoanDich.getSoDu() + soTien);
+            }
+            TransactionLogger.logChuyenTien(taiKhoanNguon, taiKhoanDich, soTien, "Thanh cong");
             return "Chuyen tien thanh cong: " + Utils.formatCurrency(soTien) + ".";
         } catch (TaiKhoanBiKhoaException | SaiPinException | SoTienKhongHopLeException
                  | KhongDuSoDuException | ChuyenKhoanThatBaiException e) {
+            TransactionLogger.logChuyenTien(taiKhoanNguon, null, 0, e.getMessage());
             return e.getMessage();
         }
     }

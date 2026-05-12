@@ -3,6 +3,13 @@
   "configurations": [
     {
       "type": "java",
+      "name": "DemoThreadSafe",
+      "request": "launch",
+      "mainClass": "com.atm.DemoThreadSafe",
+      "projectName": "atm-system"
+    },
+    {
+      "type": "java",
       "name": "Run DemoConsole",
       "request": "launch",
       "mainClass": "com.atm.DemoConsole",
