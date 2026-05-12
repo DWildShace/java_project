@@ -273,6 +273,33 @@ java -cp target/classes com.atm.DemoConsole
 - ✅ Kiểm tra xác thực PIN - Thẻ khóa sau 3 lần nhập sai
 - ✅ Kiểm tra giao dịch - Lịch sử giao dịch được ghi lại
 
+### 🧪 Chạy Test Giai Đoạn 3
+---
+#### **Cách 1: Sử dụng Maven**
+```bash
+# Compile project
+mvn clean compile
+
+# Chạy demo đa luồng để kiểm tra khóa đồng bộ khi trừ tiền
+java -cp target/classes com.atm.DemoThreadSafe
+ 
+# Chạy demo console để kiểm tra các case đúng và case lỗi
+java -cp target/classes com.atm.DemoConsole
+```
+
+#### **Cách 2: Chạy trực tiếp trong IDE**
+1. **Mở file DemoThreadSafe.java**
+   - Click chuột phải → **Run** → **Run 'DemoThreadSafe.main()'**
+2. **Mở file DemoConsole.java**
+   - Click chuột phải → **Run** → **Run 'DemoConsole.main()'**
+
+### 📊 Output Mong Đợi
+- ✅ **Kiểm tra đồng bộ đa luồng:** 2 luồng cùng rút tiền trên 1 tài khoản, chỉ giao dịch hợp lệ được xử lý đúng.
+- ✅ **Kiểm tra khóa tài khoản:** Khi một luồng đang trừ tiền, luồng khác không làm sai lệch số dư.
+- ✅ **Kiểm tra ghi file:** Lịch sử rút/chuyển tiền được lưu vào `logs/giao_dich.txt`.
+- ✅ **Kiểm tra đọc file:** Demo in lại lịch sử giao dịch từ file ra console.
+- ✅ **Kiểm tra dữ liệu:** Số dư cuối cùng không bị âm hoặc sai lệch do race condition.
+
 ---
 
 ## 📚 Tính Chất OOP Áp Dụng
