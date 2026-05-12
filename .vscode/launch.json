@@ -3,12 +3,10 @@
   "configurations": [
     {
       "type": "java",
-      "name": "Run DemoConsole",
+      "name": "Main",
       "request": "launch",
-      "mainClass": "com.atm.DemoConsole",
-      "projectName": "atm-system",
-      "vmArgs": "-Dfile.encoding=UTF-8",
-      "console": "integratedTerminal"
-    }
+      "mainClass": "com.atm.Main",
+      "projectName": "atm-system"
+    },
   ]
 }
