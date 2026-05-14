@@ -55,7 +55,7 @@ Dự án áp dụng mô hình Layered Architecture:
 ---
 
 ## 📝 Lưu ý khi phát triển
-- **UI Lifecycle:** Khi chuyển Panel, hãy gọi `setVisible(true)` để trigger việc refresh dữ liệu từ DB thay vì chỉ dùng `addNotify`.
+- **UI Lifecycle:** Khi chuyển Panel, hãy gọi `setVisible(true)` để trigger việc refresh dữ liệu từ DB.
 - **Transaction:** Luôn đóng connection hoặc trả về pool sau khi sử dụng để tránh leak.
 - **Card-First Auth:** Luồng đăng nhập hiện tại là: Nhập Số Thẻ -> Kiểm tra PIN -> Truy xuất Tài khoản liên kết.
 
